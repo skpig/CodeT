@@ -33,15 +33,17 @@ def evaluate_with_test_code(
         for sample in samples:
             task_id = sample["task_id"]
             prompt = sample['prompt']
-            test = sample['test']
+            test = sample['test']  # The test cases from Humaneval dataset
             entry_point = sample['entry_point']
             completion = sample["completion"]
+            # deduplicate solutions
             if completion in existed_completion[task_id]:
                 continue
             existed_completion[task_id].add(completion)
             args = (task_id, prompt, completion, test, entry_point, timeout)
             future = executor.submit(check_correctness, *args)
             futures.append(future)
+        # len(futures) <= len(samples)
         logger.info(f'{len(futures)} execution requests are submitted')
         
         for idx, future in enumerate(as_completed(futures)):
@@ -71,7 +73,7 @@ def evaluate_with_test_cases(
 ):
     logger.info(f'Start evaluation with test cases, timeout={timeout}, limit={limit}')
     # Check the generated solutions against test suites.
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers=2) as executor:
         futures = []
         results_list = []
         existed_completion = defaultdict(set)
@@ -87,8 +89,9 @@ def evaluate_with_test_cases(
             if not task_test_cases:
                 continue
             # get limited test cases
-            limited_task_test_cases = [cases_per_sample[:limit] for cases_per_sample in task_test_cases]
-            limited_task_test_cases = sum(limited_task_test_cases, [])
+            # limited_task_test_cases = [cases_per_sample[:limit] for cases_per_sample in task_test_cases]
+            # limited_task_test_cases = sum(limited_task_test_cases, [])
+            limited_task_test_cases = task_test_cases # because we already limit the number of test cases in the data preparation step
             
             args = (task_id, prompt, completion, list(set(limited_task_test_cases)), timeout)
             future = executor.submit(check_correctness_with_test_cases, *args)

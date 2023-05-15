@@ -1,3 +1,5 @@
 .vscode/
 CodeT/.runtime/
-CodeT/src/__pycache__/
+CodeT/chatgpt_data/CodeContests/
+CodeT/chatgpt_data/human_eval/
+__pycache__/

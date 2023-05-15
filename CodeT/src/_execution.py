@@ -9,6 +9,7 @@ import os
 import multiprocessing
 import platform
 import signal
+import resource
 import tempfile
 
 def _pack_test_cases(test_cases, timeout):
@@ -34,38 +35,49 @@ def check_correctness_with_test_cases(task_id, prompt, completion, test_cases, t
 
     def unsafe_execute():
 
-        with create_tempdir():
+        try:
+            with create_tempdir():
 
-            # These system calls are needed when cleaning up tempdir.
-            import os
-            import shutil
-            rmtree = shutil.rmtree
-            rmdir = os.rmdir
-            chdir = os.chdir
+                # These system calls are needed when cleaning up tempdir.
+                import os
+                import shutil
+                rmtree = shutil.rmtree
+                rmdir = os.rmdir
+                chdir = os.chdir
 
-            # Disable functionalities that can make destructive changes to the test.
-            reliability_guard()
+                max_memory = 1024 * 1024 * 100  # 100MB
+                soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+                resource.setrlimit(resource.RLIMIT_AS, (max_memory, hard))
 
-            # Construct the check program and run it.
-            check_program = (
-                prompt + completion + "\n" +
-                _pack_test_cases(test_cases, timeout)
-            )
+                # Disable functionalities that can make destructive changes to the test.
+                reliability_guard()
 
-            try:
-                exec_globals = {'time_limit': time_limit}
-                with swallow_io():
-                    exec(check_program, exec_globals)
-                result.append(exec_globals['final_result'])
-            except TimeoutException:
-                result.append("timed out")
-            except BaseException as e:
-                result.append(f"failed: {e}")
+                # Construct the check program and run it.
+                check_program = (
+                    prompt + completion + "\n" +
+                    _pack_test_cases(test_cases, timeout)
+                )
 
-            # Needed for cleaning up.
-            shutil.rmtree = rmtree
-            os.rmdir = rmdir
-            os.chdir = chdir
+                try:
+                    exec_globals = {'time_limit': time_limit}
+                    with swallow_io():
+                        exec(check_program, exec_globals)
+                    result.append(exec_globals['final_result'])
+                except TimeoutException:
+                    result.append("timed out")
+                except MemoryError:
+                    result.append("memory error")
+                except Exception as e:
+                    result.append(f"failed: {e}")
+
+                # Needed for cleaning up.
+                shutil.rmtree = rmtree
+                os.rmdir = rmdir
+                os.chdir = chdir
+        except Exception as e:
+            print(e)
+        finally:
+            os._exit(0) # Kill the process.
 
     manager = multiprocessing.Manager()
     result = manager.list()

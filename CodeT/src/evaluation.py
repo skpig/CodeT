@@ -57,7 +57,7 @@ def _turn_solution_scores_into_choose_count(sorted_solution_scores, topk):
         return result
     
 
-def get_result_of_sorted_solutions(ground_truth_results_list, sorted_solutions_by_task, topks=[1,2,10]):
+def get_result_of_sorted_solutions(ground_truth_results_list, sorted_solutions_by_task, topks=[1,2,10,100]):
     # sorted_solutions_by_task {task_id: [([solutions], score), ...]}
     def _count_correct(solutions: list, ground_truth_results: dict) -> int:
         return sum([ground_truth_results[s] for s in solutions])

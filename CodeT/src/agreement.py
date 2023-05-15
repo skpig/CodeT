@@ -19,7 +19,7 @@ class DataManager:
         logger.info('handling dual exec results')
         self.dual_exec_results = dual_exec_results
         self.sampled_code_by_task = sampled_code_by_task
-        self.sampled_test_case_by_task = sampled_test_case_by_task
+        self.sampled_test_case_by_task = sampled_test_case_by_task #MARK
         self.limit = limit
         
         self.solution_frequency_by_task = defaultdict(Counter)
@@ -53,10 +53,11 @@ class DataManager:
 
     def _get_test_case_frequency(self):
         for task_id in self.sampled_test_case_by_task.keys():
-            task_test_cases = [
-                cases_per_sample[:self.limit] for cases_per_sample in self.sampled_test_case_by_task[task_id]
-            ]
-            task_test_cases = sum(task_test_cases, [])
+            # task_test_cases = [
+            #     cases_per_sample[:self.limit] for cases_per_sample in self.sampled_test_case_by_task[task_id]
+            # ]
+            # task_test_cases = sum(task_test_cases, [])
+            task_test_cases = self.sampled_test_case_by_task[task_id]
             self.test_case_frequency_by_task[task_id] = Counter(task_test_cases)
     
     def _get_passed_solution_test_case_pairs_by_task(self):

@@ -49,9 +49,11 @@ class PostProcessor:
         predictions = Tools.load_jsonl(predict_path)
         for pre in predictions:
             task = database[pre['prompt']]
-            for sample in pre['samples']:
-                test_cases = PostProcessor.test_case_extract(sample, task['entry_point'])
-                test_cases_by_task[task['task_id']].append(test_cases)
+            # for sample in pre['samples']:
+            #     test_cases = PostProcessor.test_case_extract(sample, task['entry_point'])
+            #     test_cases_by_task[task['task_id']].append(test_cases)
+
+            test_cases_by_task[task['task_id']] = pre['samples'] # a list of test cases, each test case is a string "assert ..."
         return test_cases_by_task
 
     @staticmethod
