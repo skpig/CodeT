@@ -16,8 +16,9 @@ cd "$script_parent_dir"
 echo "New working directory: $(pwd)"  
 
 python main.py \
-    --source_path_for_solution "./chatgpt_data/human_eval/original_dataset.jsonl" \
-    --predict_path_for_solution "./chatgpt_data/human_eval/code_solution_in_codet_format.jsonl" \
-    --source_path_for_test "./chatgpt_data/human_eval/original_dataset.jsonl" \
-    --predict_path_for_test "./chatgpt_data/human_eval/test_cases_in_codet_format.jsonl" \
-    --cache_dir ./.runtime 
+    --source_path_for_solution "./dataset/human_eval.jsonl" \
+    --predict_path_for_solution "./chatgpt_data/human_eval/solutions.jsonl" \
+    --source_path_for_test "./dataset/human_eval.jsonl" \
+    --predict_path_for_test "./chatgpt_data/human_eval/test_cases.pkl" \
+    --cache_dir ./.runtime \
+    --timeout 0.1
