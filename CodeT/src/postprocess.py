@@ -19,7 +19,7 @@ class PostProcessor:
         predictions = Tools.load_jsonl(predict_path)
         for pre in predictions:
             task = database[pre['prompt']]
-            if not pre['samples']:
+            if not pre['completions']:
                 result.append({
                     'task_id': task['task_id'],
                     'prompt': pre['prompt'],
@@ -27,7 +27,7 @@ class PostProcessor:
                     'entry_point': task['entry_point'],
                     'completion': 'empty solution here, execution will fail'
                 })
-            for sample in pre['samples']:
+            for sample in pre['completions']:
                 processed_code = PostProcessor.solution_extract(sample)
                 result.append({
                     'task_id': task['task_id'],
@@ -46,14 +46,15 @@ class PostProcessor:
             database[raw_problems[task_id]['prompt']] = raw_problems[task_id]
 
         test_cases_by_task = defaultdict(list)
-        predictions = Tools.load_jsonl(predict_path)
+        predictions = Tools.load_pickle(predict_path)
         for pre in predictions:
             task = database[pre['prompt']]
             # for sample in pre['samples']:
             #     test_cases = PostProcessor.test_case_extract(sample, task['entry_point'])
             #     test_cases_by_task[task['task_id']].append(test_cases)
 
-            test_cases_by_task[task['task_id']] = pre['samples'] # a list of test cases, each test case is a string "assert ..."
+            test_cases = [item['tc_str'] for item in pre['tc_input_output']][:500] # only take the first 500 test cases
+            test_cases_by_task[task['task_id']] = test_cases # a list of test cases, each test case is a string "assert ..."
         return test_cases_by_task
 
     @staticmethod
