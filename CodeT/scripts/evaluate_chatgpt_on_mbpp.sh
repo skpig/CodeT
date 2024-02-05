@@ -21,4 +21,5 @@ python main.py \
     --source_path_for_test "./dataset/mbpp.jsonl" \
     --predict_path_for_test "./chatgpt_data/mbpp/test_cases.pkl" \
     --cache_dir ./.runtime \
+    --output_path "./chatgpt_data/mbpp/code_sorted_codet.pkl" \
     --timeout 0.1

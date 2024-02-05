@@ -28,13 +28,13 @@ class PostProcessor:
                     'completion': 'empty solution here, execution will fail'
                 })
             for sample in pre['completions']:
-                processed_code = PostProcessor.solution_extract(sample)
+                # processed_code = PostProcessor.solution_extract(sample)
                 result.append({
                     'task_id': task['task_id'],
                     'prompt': pre['prompt'],
                     'test': task['test'],
                     'entry_point': task['entry_point'],
-                    'completion': processed_code
+                    'completion': sample # processed_code
                 })
         return result, len(raw_problems)
 

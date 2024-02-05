@@ -3,3 +3,7 @@ CodeT/.runtime/
 CodeT/chatgpt_data/CodeContests/
 CodeT/chatgpt_data/human_eval/
 __pycache__/
+algo_data/
+chatgpt_data/
+save/
+dataset/

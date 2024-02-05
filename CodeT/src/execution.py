@@ -73,7 +73,7 @@ def evaluate_with_test_cases(
 ):
     logger.info(f'Start evaluation with test cases, timeout={timeout}, limit={limit}')
     # Check the generated solutions against test suites.
-    with ProcessPoolExecutor(max_workers=150) as executor:
+    with ProcessPoolExecutor(max_workers=25) as executor:
         futures = []
         results_list = []
         existed_completion = defaultdict(set)
@@ -94,6 +94,7 @@ def evaluate_with_test_cases(
             limited_task_test_cases = task_test_cases # because we already limit the number of test cases in the data preparation step
             
             args = (task_id, prompt, completion, list(set(limited_task_test_cases)), timeout)
+            # check_correctness_with_test_cases(*args) # DEBUG
             future = executor.submit(check_correctness_with_test_cases, *args)
             futures.append(future)
 

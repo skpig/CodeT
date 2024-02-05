@@ -21,4 +21,5 @@ python main.py \
     --source_path_for_test "./dataset/human_eval.jsonl" \
     --predict_path_for_test "./chatgpt_data/human_eval/test_cases.pkl" \
     --cache_dir ./.runtime \
+    --output_path "./chatgpt_data/human_eval/code_sorted_codet.pkl" \
     --timeout 0.1

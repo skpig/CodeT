@@ -16,9 +16,10 @@ cd "$script_parent_dir"
 echo "New working directory: $(pwd)"  
 
 python main.py \
-    --source_path_for_solution "./dataset/mbpp_plus.jsonl" \
-    --predict_path_for_solution "./chatgpt_data/mbpp_plus/solutions.jsonl" \
-    --source_path_for_test "./dataset/mbpp_plus.jsonl" \
-    --predict_path_for_test "./chatgpt_data/mbpp_plus/test_cases.pkl" \
+    --source_path_for_solution "./dataset/CodeContests.jsonl" \
+    --predict_path_for_solution "./algo_data/CodeContests/solutions.jsonl" \
+    --source_path_for_test "./dataset/CodeContests.jsonl" \
+    --predict_path_for_test "./algo_data/CodeContests/test_cases.pkl" \
     --cache_dir ./.runtime \
+    --output_path "algo_data/CodeContests/code_sorted_algo.pkl" \
     --timeout 0.1
