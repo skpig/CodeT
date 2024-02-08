@@ -53,7 +53,7 @@ class PostProcessor:
             #     test_cases = PostProcessor.test_case_extract(sample, task['entry_point'])
             #     test_cases_by_task[task['task_id']].append(test_cases)
 
-            test_cases = [item['tc_str'] for item in pre['tc_input_output']][:500] # only take the first 500 test cases
+            test_cases = [item['tc_str'] for item in pre['tc_input_output']][50:150] # only take the first 50 test cases
             test_cases_by_task[task['task_id']] = test_cases # a list of test cases, each test case is a string "assert ..."
         return test_cases_by_task
 

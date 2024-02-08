@@ -94,7 +94,7 @@ def check_correctness_with_test_cases(task_id, prompt, completion, test_cases, t
 
     return dict(
         task_id=task_id,
-        # test_cases=test_cases,
+        test_cases=test_cases,
         completion=completion,
         passed=(type(result[0]) == list) and len(result[0]) > 0,
         result=result[0]
